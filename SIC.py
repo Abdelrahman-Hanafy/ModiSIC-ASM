@@ -182,3 +182,47 @@ def getObcode(prog,inst,symb):
 
     prog["ObCode"] = obcode
     prog.to_csv("OUT/out_pass2.txt",sep="\t",index=False)
+
+def getHErecord(prog):
+    #Make H record
+    name = prog[prog.mono == "START"].label[0]
+    st_Addr = prog[prog.mono == "START"].oprnd[0]
+    st_Addr = f"{int(st_Addr,16):06x}"
+    
+    l = len(prog.LOC) - 1 
+    end = prog[prog.mono == "END"].LOC[l]
+    ln = int(end,16) - int(st_Addr,16)
+    length = f"{ln:06x}"
+    
+    h = f"H{name:x>6}{st_Addr}{length}\nE{st_Addr}"
+    return h
+
+def getTrecord(prog):
+    #Make T records
+    ln = 0
+    tmp = ""
+    t= ""
+    for l,m,ob in zip(prog.LOC,prog.mono,prog.ObCode):
+        ob = str(ob)
+        if(m == "START"):
+            st_Addr = l
+        elif(m == "END"):
+            if(len(tmp) > 0):
+                t += f"T{st_Addr:0>6}{ln//2:02x}{tmp}\n"
+        elif("RES" in m):
+            if(len(tmp) > 0):
+                t += f"T{st_Addr:0>6}{ln//2:02x}{tmp}\n"
+            tmp = ""
+            ln = 0
+            st_Addr = l
+        
+        elif(ln + len(ob) <= 60):
+            tmp += ob
+            ln += len(ob)
+        
+        else:
+            t += f"T{st_Addr:0>6}{ln//2:02x}{tmp}\n"
+            st_Addr = l
+            tmp = ob
+            ln = len(ob)
+    return t
