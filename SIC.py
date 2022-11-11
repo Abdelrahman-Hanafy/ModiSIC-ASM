@@ -81,7 +81,6 @@ def getLoc(inst,prog):
     '''
     Function : generate location counter
     Arg : dataframe with the program, instruction dict
-    Resuorses : none
     ouput : pass1 file
     '''
     x = prog[prog.mono == "START"].oprnd[0]
@@ -114,3 +113,21 @@ def getLoc(inst,prog):
         
     prog.insert(0,"LOC",loc)
     prog.to_csv("OUT/out_pass1.txt",sep="\t",index=False)
+
+def getSymbTab(prog):
+    '''
+    Function : generate symble table
+    Arg : dataframe with the program
+    output : symbTable file
+    return : symb dict
+    '''
+    table = {}
+    for loc,lab in zip(prog.LOC,prog.label):
+        if(lab is not np.nan):
+            table[lab] = loc
+    with open('OUT/symbTable.txt','w') as file:
+        tmp = ""
+        for k,v in table.items():
+            tmp += f"{k}:{v}\n"
+        file.write(tmp)
+    return table
