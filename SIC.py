@@ -226,3 +226,11 @@ def getTrecord(prog):
             tmp = ob
             ln = len(ob)
     return t
+
+def writeHTE(prog):
+    with open('OUT/HTE.txt','w') as file:
+        HE = getHErecord(prog).split('\n')
+        T = getTrecord(prog)
+        file.write(HE[0]+"\n")
+        file.write(T)
+        file.write(HE[1])
