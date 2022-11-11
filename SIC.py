@@ -131,3 +131,54 @@ def getSymbTab(prog):
             tmp += f"{k}:{v}\n"
         file.write(tmp)
     return table
+
+def getObcode(prog,inst,symb):
+    '''
+    Function : generate object code
+    Arg : dataframe with the program, instruction dict, symbole dict
+    output : pass2 file
+    '''
+    obcode = []
+    for s,v in zip(prog.mono,prog.oprnd):
+        tmp = ""
+        if(s in inst):
+            t = inst[s]
+            if('-' in inst[s]):
+                obcode.append(t)
+                continue
+            elif( s == "RSUB"):
+                tmp = "0000"
+            elif('#' in v):
+                tmp = hex(int(v[1:]))
+                t[8]  = '1'
+                obcode.append(f"{t:x}{tmp:04x}")
+                continue
+            elif(',X' in v):
+                tmp = symb[v[:-2]]
+                tmp = hexSum(tmp,"1000")
+            else:
+                tmp = symb[v]
+                
+            tmp = int(tmp,16)
+            t = int(t,2)
+            obcode.append(f"{t:02x}{tmp:04x}")
+
+        else:
+            if(s == "START" or s == "END" or "RES" in s):
+                obcode.append(np.nan)
+            else:
+                val = ""
+                v = str(v)
+                if('C' in v):
+                    v = v[2:-1]
+                    val = "".join([f"{ord(i):0x}" for i in v ])
+                elif('X' in v):
+                    val = v[2:-1]
+                elif(s == "WORD"):
+                    val = f"{int(v):06x}"
+                elif(s == "BYTE"):
+                    val = f"{int(v):02x}"
+                obcode.append(val)
+
+    prog["ObCode"] = obcode
+    prog.to_csv("OUT/out_pass2.txt",sep="\t",index=False)
