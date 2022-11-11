@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import re
 import Util
 from Util import hexSum 
 
@@ -26,12 +27,11 @@ def loadProg(inst,f):
     temp = []
     with open(f,'r') as f:
         lines = f.readlines()
-        lines = [x.split('\t') for x in lines]
+        lines = [re.sub('\s+',' ',l) for l in lines]
+        lines = [x.split(' ') for x in lines]
         for line in lines:
             line = [x.strip() for x in line[1:] if (x != '' and x != ' ')]
-            if '.' in line:
-                continue
-            if(len(line) == 1 and line[0] == ''):
+            if ('.' in line or len(line)==0):
                 continue
             temp.append(line)
     

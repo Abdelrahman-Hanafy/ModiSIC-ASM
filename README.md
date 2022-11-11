@@ -4,7 +4,6 @@ this project is assosiated with systems programming course at Arab Academy for S
 ## Requirements
 ```
     pip install pandas
-    pip install numpy
 ```
 ## File structure
 ```
@@ -25,7 +24,7 @@ MODISIC ASM
 ```
 ## How to run the ASM
 - Clone the project on your machine
-- Run the 2 lines of Requirements section on your CMD
-- Put your assembly program at `in.txt` and Ensure that it's tab seperated
+- Run the command found in `Requirements` section on your CMD
+- Put your assembly program at `in.txt` 
 - Run `RUN.bat` file and it will create `OUT` if you deleted it
 - Open `OUT` dir and find all the output files
