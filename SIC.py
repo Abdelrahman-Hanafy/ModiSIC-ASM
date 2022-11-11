@@ -76,3 +76,41 @@ def loadProg(inst):
     
     demo.to_csv("OUT/intermediate.txt",sep="\t",index=False)
     return demo
+
+def getLoc(inst,prog):
+    '''
+    Function : generate location counter
+    Arg : dataframe with the program, instruction dict
+    Resuorses : none
+    ouput : pass1 file
+    '''
+    x = prog[prog.mono == "START"].oprnd[0]
+    loc = []
+    for s,v in zip(prog.mono,prog.oprnd):
+        loc.append(f'{x:0>4}')
+        v = str(v)
+        if(s == 'START'):
+            continue
+        if(s in inst):
+            if('-' in inst[s]):
+                x = hexSum(x,"1")
+            else:
+                x = hexSum(x,"3")
+        else:
+            size = "0"
+            if('C' in v):
+                size = hex(len(v[2:-1]))
+            elif('X' in v):
+                size = hex(len(v[2:-1])//2)
+            elif(s == "WORD"):
+                size = "3"
+            elif(s == "BYTE"):
+                size = "1"
+            elif(s == "RESW"):
+                size = hex(int(v)*3)
+            elif(s == "RESB"):
+                size = hex(int(v))
+            x = hexSum(x,size)
+        
+    prog.insert(0,"LOC",loc)
+    prog.to_csv("OUT/out_pass1.txt",sep="\t",index=False)
