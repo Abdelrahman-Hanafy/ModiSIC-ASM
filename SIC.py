@@ -155,7 +155,7 @@ def getObcode(prog,inst,symb):
                 continue
             elif(',X' in v):
                 tmp = symb[v[:-2]]
-                tmp = hexSum(tmp,"1000")
+                tmp = hexSum(tmp,"8000")
             else:
                 tmp = symb[v]
                 
