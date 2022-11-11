@@ -15,7 +15,7 @@ def loadInstruction():
         
     return instructions
 
-def loadProg(inst):
+def loadProg(inst,f):
     '''
     Function : Make intermediate file
     Arg : instruction dict
@@ -24,7 +24,7 @@ def loadProg(inst):
     return: dataframe with [label, mono, oprand]
     '''
     temp = []
-    with open('in.txt','r') as f:
+    with open(f,'r') as f:
         lines = f.readlines()
         lines = [x.split('\t') for x in lines]
         for line in lines:
