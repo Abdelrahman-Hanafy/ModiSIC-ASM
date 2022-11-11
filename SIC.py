@@ -144,14 +144,15 @@ def getObcode(prog,inst,symb):
         if(s in inst):
             t = inst[s]
             if('-' in inst[s]):
-                obcode.append(t)
+                t = t[1:]
+                obcode.append(f"{int(t,2):02x}")
                 continue
             elif( s == "RSUB"):
                 tmp = "0000"
             elif('#' in v):
                 tmp = hex(int(v[1:]))
-                t[8]  = '1'
-                obcode.append(f"{t:x}{tmp:04x}")
+                t = t[:7]+'1'
+                obcode.append(f"{int(t,2):02x}{tmp:04x}")
                 continue
             elif(',X' in v):
                 tmp = symb[v[:-2]]
