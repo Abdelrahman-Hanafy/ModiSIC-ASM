@@ -1,3 +1,3 @@
 MD OUT
-python3 Assimbler.py
+python3 Assembler.py
 pause 
